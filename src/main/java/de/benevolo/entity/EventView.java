@@ -21,6 +21,15 @@ public class EventView extends PanacheEntityBase {
 
     private int views;
 
+    public EventView() {
+    }
+
+    public EventView(String eventId, LocalDate occurringDate) {
+        this.eventId = eventId;
+        this.occurringDate = occurringDate;
+        this.views = 0;
+    }
+
     public String getId() {
         return id;
     }
@@ -51,5 +60,9 @@ public class EventView extends PanacheEntityBase {
 
     public void setViews(int views) {
         this.views = views;
+    }
+
+    public void increment() {
+        views++;
     }
 }

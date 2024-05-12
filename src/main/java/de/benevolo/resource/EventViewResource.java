@@ -5,10 +5,8 @@ import de.benevolo.entity.EventView;
 import de.benevolo.repo.EventViewRepo;
 import jakarta.inject.Inject;
 import jakarta.persistence.Id;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 
 import java.time.LocalDate;
@@ -41,6 +39,16 @@ public class EventViewResource {
             }
         }
         return result;
+    }
+
+    @PATCH
+    @Consumes
+    @Produces
+    @Transactional
+    public void addPageView(@PathParam("eventId") String eventId) {
+        EventView eventView = eventViewRepo.findByEventIdAndOccurringDate(eventId, LocalDate.now());
+        eventView.increment();
+        eventViewRepo.persist(eventView);
     }
 
 }
