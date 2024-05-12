@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  benevolo.ticket-service:
+    build:
+      context: .
+      dockerfile: dockerfile
+      args:
+        - DATABASE_USERNAME=${DATABASE_USERNAME}
+        - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+        - KEYCLOAK_SECRET=${KEYCLOAK_SECRET}
+    container_name: benevolo.analytics-service
+    image: ghcr.io/thi24/benevolo.analytics-service:${GITHUB_RUN_ID}
+    environment:
+      - TZ=Europe/Berlin
+    networks:
+      - backend
+
+networks:
+  backend:
+    external: true
