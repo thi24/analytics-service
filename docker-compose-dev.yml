@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  dev.benevolo.ticket-service:
+  dev.benevolo.analytics-service:
     build:
       context: .
       dockerfile: dockerfile
