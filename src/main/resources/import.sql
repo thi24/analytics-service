@@ -1,7 +1,4 @@
 INSERT INTO event_view(id, event_id, occurring_date, views)
-VALUES ('abc31dc0-5694-4246-ae14-3f32b82e6315', '383f700f-5449-4e40-b509-bee0b5d139d6', '2024-05-11', 34),
-       ('bbc31dc0-5694-4246-ae14-3f32b82e6315', '383f700f-5449-4e40-b509-bee0b5d139d6', '2024-05-10', 18),
-       ('cbc31dc0-5694-4246-ae14-3f32b82e6315', '383f700f-5449-4e40-b509-bee0b5d139d6', '2024-05-08', 52),
-       ('dbc31dc0-5694-4246-ae14-3f32b82e6315', 'a83f700f-5449-4e40-b509-bee0b5d139d6', '2024-05-12', 34),
-       ('1bc31dc0-5694-4246-ae14-3f32b82e6315', 'a83f700f-5449-4e40-b509-bee0b5d139d6', '2024-05-09', 18),
-       ('2bc31dc0-5694-4246-ae14-3f32b82e6315', 'a83f700f-5449-4e40-b509-bee0b5d139d6', '2024-05-07', 52);
+SELECT gen_random_uuid(), '383f700f-5449-4e40-b509-bee0b5d139d6' , (NOW() - (floor(random() * 120) || ' days')::interval)::date
+     , floor(random() * 2900 + 100)::int
+FROM generate_series(1,300) id;
