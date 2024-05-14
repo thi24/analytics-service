@@ -1,6 +1,11 @@
+DROP SCHEMA IF EXISTS benevolo_analytics_service CASCADE;
+CREATE SCHEMA benevolo_analytics_service;
+
+SET schema 'benevolo_analytics_service';
+
 CREATE TABLE event_view (
-    id UUID PRIMARY KEY,
-    event_id UUID NOT NULL,
+    id VARCHAR(256) PRIMARY KEY,
+    event_id VARCHAR(256) NOT NULL,
     occurring_date DATE NOT NULL,
     views INT NOT NULL
 );
