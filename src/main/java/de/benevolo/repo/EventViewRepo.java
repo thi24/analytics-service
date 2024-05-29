@@ -7,7 +7,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @ApplicationScoped
 public class EventViewRepo implements PanacheRepositoryBase<EventView, String> {

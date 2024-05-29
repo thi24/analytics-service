@@ -1,7 +1,10 @@
 package de.benevolo.entity;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import java.time.LocalDate;
 
@@ -10,12 +13,10 @@ import java.time.LocalDate;
 public class EventView extends PanacheEntityBase {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
-
     @Column(name = "event_id")
     private String eventId;
 
+    @Id
     @Column(name = "occurring_date")
     private LocalDate occurringDate;
 
@@ -30,13 +31,6 @@ public class EventView extends PanacheEntityBase {
         this.views = 0;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getEventId() {
         return eventId;

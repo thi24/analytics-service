@@ -1,14 +1,17 @@
 package de.benevolo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import java.sql.Time;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "ticket_validation")
-public class TicketValidationEntity {
+public class TicketValidation {
 
     @Id
     @Column(name = "event_id")
@@ -25,11 +28,10 @@ public class TicketValidationEntity {
 
     private int count;
 
-
-    public TicketValidationEntity() {
+    public TicketValidation() {
     }
 
-    public TicketValidationEntity(String eventId, LocalDate validationDate, Time validationTime, int count) {
+    public TicketValidation(String eventId, LocalDate validationDate, Time validationTime, int count) {
         this.eventId = eventId;
         this.validationDate = validationDate;
         this.validationTime = validationTime;

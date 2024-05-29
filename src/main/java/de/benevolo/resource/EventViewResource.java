@@ -3,8 +3,8 @@ package de.benevolo.resource;
 import de.benevolo.dto.EventViewDTO;
 import de.benevolo.entity.EventView;
 import de.benevolo.repo.EventViewRepo;
+import io.quarkus.security.Authenticated;
 import jakarta.inject.Inject;
-import jakarta.persistence.Id;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -26,13 +26,14 @@ public class EventViewResource {
     @GET
     @Path("/{dateFrom}/{dateTo}")
     @Produces(MediaType.APPLICATION_JSON)
+    @Authenticated
     public List<EventViewDTO> get(@PathParam("eventId") String eventId, @PathParam("dateFrom") String rawDateFrom, @PathParam("dateTo") String rawDateTo) {
         List<LocalDate> daysInRange = LocalDate.parse(rawDateFrom).datesUntil(LocalDate.parse(rawDateTo).plusDays(1)).toList();
         List<EventView> eventViews = eventViewRepo.findByEventId(eventId);
         List<EventViewDTO> result = new LinkedList<>();
-        for(LocalDate date : daysInRange) {
+        for (LocalDate date : daysInRange) {
             EventView searchResult = eventViews.stream().filter(item -> item.getOccurringDate().toString().equals(date.toString())).findFirst().orElse(null);
-            if(searchResult != null) {
+            if (searchResult != null) {
                 result.add(new EventViewDTO(date, searchResult.getViews()));
             } else {
                 result.add(new EventViewDTO(date, 0));
@@ -42,11 +43,10 @@ public class EventViewResource {
     }
 
     @PATCH
-    @Consumes
-    @Produces
     @Transactional
     public void addPageView(@PathParam("eventId") String eventId) {
-        EventView eventView = eventViewRepo.findByEventIdAndOccurringDate(eventId, LocalDate.now());
+        LocalDate viewDate = LocalDate.now();
+        EventView eventView = eventViewRepo.findByEventIdAndOccurringDate(eventId, viewDate);
         eventView.increment();
         eventViewRepo.persist(eventView);
     }

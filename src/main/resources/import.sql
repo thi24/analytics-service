@@ -5,19 +5,19 @@ SET schema 'benevolo_analytics_service';
 
 CREATE TABLE event_view
 (
-    id             VARCHAR(256) PRIMARY KEY,
     event_id       VARCHAR(256) NOT NULL,
     occurring_date DATE         NOT NULL,
-    views          INT          NOT NULL
+    views          INT          NOT NULL,
+    PRIMARY KEY (event_id, occurring_date)
 );
 
 
 CREATE TABLE ticket_validation
 (
-    event_id VARCHAR(256) NOT NULL,
-    validation_date DATE NOT NULL,
-    validation_time TIME NOT NULL,
-    count INT,
+    event_id        VARCHAR(256) NOT NULL,
+    validation_date DATE         NOT NULL,
+    validation_time TIME         NOT NULL,
+    count           INT,
     PRIMARY KEY (event_id, validation_date, validation_time)
 
 );
@@ -28,20 +28,18 @@ SELECT '383f700f-5449-4e40-b509-bee0b5d139d6'
      , (current_date - interval '1 day' * s1.i)::date
      , ((s2.i)::text || ':00:00')::time
      , floor(random() * 1000 + 100)::int
-FROM generate_series(0, 29) s1(i), generate_series(14, 23) s2(i)
-WHERE NOT EXISTS (
-    SELECT 1
-    FROM ticket_validation
-    WHERE event_id = '383f700f-5449-4e40-b509-bee0b5d139d6'
-      AND validation_date = (current_date - interval '1 day' * s1.i)::date
-      AND validation_time = ((s2.i)::text || ':00:00')::time
-);
+FROM generate_series(0, 29) s1(i),
+     generate_series(14, 23) s2(i)
+WHERE NOT EXISTS (SELECT 1
+                  FROM ticket_validation
+                  WHERE event_id = '383f700f-5449-4e40-b509-bee0b5d139d6'
+                    AND validation_date = (current_date - interval '1 day' * s1.i)::date
+                    AND validation_time = ((s2.i)::text || ':00:00')::time);
 
 
 
-INSERT INTO event_view(id, event_id, occurring_date, views)
-SELECT gen_random_uuid()
-     , '383f700f-5449-4e40-b509-bee0b5d139d6'
+INSERT INTO event_view(event_id, occurring_date, views)
+SELECT '383f700f-5449-4e40-b509-bee0b5d139d6'
      , (NOW() - (floor(random() * 120) || ' days')::interval)::date
      , floor(random() * 2900 + 100)::int
 FROM generate_series(1, 300) id;
