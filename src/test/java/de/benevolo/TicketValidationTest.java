@@ -5,7 +5,7 @@ import de.benevolo.repo.TicketValidationRepo;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.security.TestSecurity;
 import jakarta.inject.Inject;
-import org.junit.jupiter.api.Disabled;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.when;
@@ -17,6 +17,9 @@ import static org.hamcrest.Matchers.equalTo;
 class TicketValidationTest {
     @Inject
     TicketValidationRepo ticketValidationRepo;
+
+    @Inject
+    EntityManager em;
 
     @Test
     @TestSecurity(user = "testUser", roles = {"user"})
@@ -34,7 +37,6 @@ class TicketValidationTest {
     }
 
     @Test
-    @Disabled
     void incrementValidationCountTest() {
         TicketValidation ticketValidation = ticketValidationRepo.findAll().firstResult();
         String eventId = ticketValidation.getEventId();
@@ -42,9 +44,14 @@ class TicketValidationTest {
         long currentViews = ticketValidationRepo.
                 findByEventIdAndDateAndTime(eventId, ticketValidation.getValidationDate(), ticketValidation.getValidationTime()).
                 getCount();
+
         when().post("/validated-tickets/event/" + eventId)
                 .then()
                 .statusCode(204);
+
+        // Clear the persistence context to ensure that the next fetch hits the database
+        em.clear();
+        
         long newViews = ticketValidationRepo.
                 findByEventIdAndDateAndTime(eventId, ticketValidation.getValidationDate(), ticketValidation.getValidationTime()).
                 getCount();

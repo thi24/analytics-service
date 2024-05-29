@@ -50,5 +50,4 @@ public class EventViewResource {
         eventView.increment();
         eventViewRepo.persist(eventView);
     }
-
 }

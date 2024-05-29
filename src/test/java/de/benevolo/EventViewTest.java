@@ -5,8 +5,8 @@ import de.benevolo.repo.EventViewRepo;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.security.TestSecurity;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -24,6 +24,8 @@ class EventViewTest {
     @Inject
     EventViewRepo eventViewRepo;
 
+    @Inject
+    EntityManager em;
 
     @Test
     @TestSecurity(user = "testUser", roles = {"user"})
@@ -45,21 +47,20 @@ class EventViewTest {
     }
 
     @Test
-    @Transactional
-    @Disabled
     void incrementPageViewTest() {
         String eventId = eventViewRepo.findAll().firstResult().getEventId();
         EventView eventView = eventViewRepo.findByEventIdAndOccurringDate(eventId, LocalDate.now());
         long currentViews = eventView.getViews();
 
-        System.out.println("Current views: " + currentViews);
-
         when().patch("/events/" + eventId + "/event-views")
                 .then()
                 .statusCode(204);
 
-        long newViews = eventViewRepo.findByEventIdAndOccurringDate(eventId, LocalDate.now()).getViews();
-        System.out.println("New views: " + newViews);
-        assertThat(newViews, equalTo(currentViews + 1));
+        // Clear the persistence context to ensure that the next fetch hits the database
+        em.clear();
+
+        EventView eventViewNew = eventViewRepo.findByEventIdAndOccurringDate(eventId, LocalDate.now());
+        long currentViewsNew = eventViewNew.getViews();
+        assertThat(currentViewsNew, equalTo(currentViews + 1));
     }
 }

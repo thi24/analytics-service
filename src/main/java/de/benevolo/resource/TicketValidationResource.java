@@ -41,7 +41,6 @@ public class TicketValidationResource {
     @Path("/event/{eventId}")
     @Transactional
     public void saveValidationTimestamp(@PathParam("eventId") String eventId) {
-        
         LocalDateTime now = LocalDateTime.now();
         LocalDate day = now.toLocalDate();
         int hour = now.getHour();
