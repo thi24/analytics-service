@@ -40,7 +40,6 @@ class TicketValidationTest {
     void incrementValidationCountTest() {
         TicketValidation ticketValidation = ticketValidationRepo.findAll().firstResult();
         String eventId = ticketValidation.getEventId();
-        ticketValidationRepo.findByEventId(eventId);
         long currentViews = ticketValidationRepo.
                 findByEventIdAndDateAndTime(eventId, ticketValidation.getValidationDate(), ticketValidation.getValidationTime()).
                 getCount();
@@ -51,10 +50,10 @@ class TicketValidationTest {
 
         // Clear the persistence context to ensure that the next fetch hits the database
         em.clear();
-        
-        long newViews = ticketValidationRepo.
-                findByEventIdAndDateAndTime(eventId, ticketValidation.getValidationDate(), ticketValidation.getValidationTime()).
-                getCount();
+
+        TicketValidation ticketValidationNew = ticketValidationRepo.
+                findByEventIdAndDateAndTime(eventId, ticketValidation.getValidationDate(), ticketValidation.getValidationTime());
+        long newViews = ticketValidationNew.getCount();
         assertThat(newViews, equalTo(currentViews + 1));
     }
 }
