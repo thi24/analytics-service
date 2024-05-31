@@ -46,7 +46,7 @@ public class EventViewResource {
     @Produces
     @Transactional
     public void addPageView(@PathParam("eventId") String eventId) {
-        EventView eventView = eventViewRepo.findByEventIdAndOccurringDate(eventId, LocalDate.now());
+        EventView eventView = eventViewRepo.findByEventIdAndOccurringDate(eventId, LocalDate.now()); //
         eventView.increment();
         eventViewRepo.persist(eventView);
     }
