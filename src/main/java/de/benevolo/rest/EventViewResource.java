@@ -1,4 +1,4 @@
-package de.benevolo.resource;
+package de.benevolo.rest;
 
 import de.benevolo.dto.EventViewDTO;
 import de.benevolo.entity.EventView;

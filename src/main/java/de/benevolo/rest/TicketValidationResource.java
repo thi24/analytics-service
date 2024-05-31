@@ -1,4 +1,4 @@
-package de.benevolo.resource;
+package de.benevolo.rest;
 
 import de.benevolo.entity.TicketValidation;
 import de.benevolo.repo.TicketValidationRepo;
