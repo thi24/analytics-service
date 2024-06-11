@@ -12,6 +12,7 @@ jobs:
       DOCKER_IMAGE_TAG: ${{ github.sha }}
       DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
       DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+      DATABASE_URL: jdbc:postgresql://benevolo.analytics-service.database:5432/
       KEYCLOAK_SECRET: ${{ secrets.KEYCLOAK_SECRET }}
       CORS_ORIGIN: "https://benevolo.de,https://dev.benevolo.de, https://localhost:3000, https://shop.benevolo.de"
 
@@ -29,12 +30,14 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: |
           echo "CORS_ORIGIN=https://benevolo.de,https://shop.benevolo.de" >> $GITHUB_ENV
+          echo "DATABASE_URL=jdbc:postgresql://benevolo.analytics-service.database:5432/" >> $GITHUB_ENV
           echo "DOCKER_IMAGE_NAME=ghcr.io/thi24/benevolo.analytics-service" >> $GITHUB_ENV
 
       - name: Set env variables for dev
         if: github.ref == 'refs/heads/develop'
         run: |
           echo "CORS_ORIGIN=https://benevolo.de,https://shop.benevolo.de,https://localhost:3000" >> $GITHUB_ENV
+          echo "DATABASE_URL=jdbc:postgresql://dev.benevolo.analytics-service.database:5432/" >> $GITHUB_ENV
           echo "DOCKER_IMAGE_NAME=ghcr.io/thi24/dev.benevolo.analytics-service" >> $GITHUB_ENV
 
       - name: Build jar
